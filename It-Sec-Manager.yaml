@@ -6,11 +6,15 @@ Descriptor:
 SkillGroups:
   - Format: KQL
     Skills:
-      - Name: Get-MTTD
+      - Name: Get MTTD
         DisplayName: Get MTTD on last 30 days
         Description: Get Mean Time to Detection on last 30 days in hours
         Settings:
           Target: Sentinel
+          TenantId: 32dc2feb-7716-4cf8-b1a6-f02cf37fd6bf
+          SubscriptionId: 595a74d5-5d8a-421d-b364-979ba24a6489
+          ResourceGroupName: onemtcww-oms
+          WorkspaceName: onemtcww
           Template: |-
             SecurityIncident
             | where FirstModifiedTime >= ago(30d)
