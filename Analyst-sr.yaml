@@ -1,0 +1,31 @@
+Descriptor:
+  Name: CLib_SeniorAnalyst
+  DisplayName: Library for Senior Analyst
+  Description: Custom Plugin collection of most wanted KQL for Senior Analyst
+
+SkillGroups:
+  - Format: KQL
+    Skills:
+      - Name: 
+        DisplayName: Get Latest Emails By Recipient
+        Description: Fetches the latest emails received by the user with the specified email address
+        Inputs:
+          - Name: email
+            Description: The email address of the recipient
+            Required: true
+        Settings:
+          Target: Defender
+          Template: |-
+            EmailEvents
+            | where RecipientEmailAddress =~ '{{email}}'
+            | project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, Subject, DeliveryLocation
+            | top 100 by Timestamp desc
+      - Name: G
+        DisplayName: Get Latest Emails
+        Description: Fetches the latest emails 
+        Settings:
+          Target: Defender
+          Template: |-
+            EmailEvents
+            | project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, Subject, DeliveryLocation
+            | top 100 by Timestamp desc

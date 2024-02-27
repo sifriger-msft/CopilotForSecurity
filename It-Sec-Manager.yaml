@@ -1,0 +1,22 @@
+Descriptor:
+  Name: CLib_SecurityManager
+  DisplayName: Library for Security Manager
+  Description: Custom Plugin collection of useful Security Manager functions
+
+SkillGroups:
+  - Format: KQL
+    Skills:
+      - Name: Get-MTTD
+        DisplayName: Get MTTD on last 30 days
+        Description: Get Mean Time to Detection on last 30 days in hours
+        Settings:
+          Target: Sentinel
+          Template: |-
+            SecurityIncident
+            | where FirstModifiedTime >= ago(30d)
+            | extend Tactics = todynamic(AdditionalData.tactics)
+            | extend Owner = todynamic(Owner.assignedTo) 
+            | extend Product = todynamic((parse_json(tostring(AdditionalData.alertProductNames))[0])) 
+            | summarize arg_max(LastModifiedTime,*) by IncidentNumber 
+            | extend TimeToTriage =  (FirstModifiedTime - CreatedTime)/1h
+            | summarize AvgTTT=avg(TimeToTriage) 
