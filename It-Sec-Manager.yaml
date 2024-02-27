@@ -8,7 +8,7 @@ SkillGroups:
     Skills:
       - Name: Get MTTD
         DisplayName: Get MTTD on last 30 days
-        Description: Get Mean Time to Detection on last 30 days in hours
+        Description: Get Mean Time to Detection average on last 30 days in hours
         Settings:
           Target: Sentinel
           TenantId: 32dc2feb-7716-4cf8-b1a6-f02cf37fd6bf
