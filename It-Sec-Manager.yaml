@@ -6,7 +6,7 @@ Descriptor:
 SkillGroups:
   - Format: KQL
     Skills:
-      - Name: Get MTTD
+      - Name: Get MTTD Team
         DisplayName: Get MTTD on last 30 days
         Description: Get Mean Time to Detection average on last 30 days in hours
         Settings:
@@ -24,3 +24,21 @@ SkillGroups:
             | summarize arg_max(LastModifiedTime,*) by IncidentNumber 
             | extend TimeToTriage =  (FirstModifiedTime - CreatedTime)/1h
             | summarize AvgTTT=avg(TimeToTriage) 
+      - Name: Get MTTR Team
+        DisplayName: Get MTTR on last 30 days
+        Description: Get Mean Time to Response average on last 30 days in hours
+        Settings:
+          Target: Sentinel
+          TenantId: 32dc2feb-7716-4cf8-b1a6-f02cf37fd6bf
+          SubscriptionId: 595a74d5-5d8a-421d-b364-979ba24a6489
+          ResourceGroupName: onemtcww-oms
+          WorkspaceName: onemtcww
+          Template: |-
+            SecurityIncident
+            | where ClosedTime >= ago(30d)
+            | extend Tactics = todynamic(AdditionalData.tactics)
+            | extend Owner = todynamic(Owner.assignedTo) 
+            | extend Product = todynamic((parse_json(tostring(AdditionalData.alertProductNames))[0])) 
+            | summarize arg_max(TimeGenerated, *) by IncidentNumber 
+            | extend TimeToClosure =  (ClosedTime - CreatedTime) / 1h
+            | summarize AvgTTC=avg(TimeToClosure)
